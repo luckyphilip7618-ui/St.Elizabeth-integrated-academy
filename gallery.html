@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery - St Elizabeth Integrated Academy</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#f4f6f8;
+}
+
+/* TOP BAR */
+.topbar{
+  background:#1e3a5f;
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+}
+
+.menu-btn{
+  font-size:26px;
+  cursor:pointer;
+  margin-right:15px;
+}
+
+/* SIDE DRAWER */
+.drawer{
+  position:fixed;
+  left:-260px;
+  top:0;
+  width:260px;
+  height:100%;
+  background:#243a5e;
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1000;
+}
+
+.drawer button{
+  width:85%;
+  margin:10px auto;
+  display:block;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2f4d75;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.drawer button:hover{
+  background:#3f6598;
+}
+
+/* MAIN CONTENT */
+.content{
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:10px;
+  margin-bottom:18px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Gallery grid */
+.gallery-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap:15px;
+}
+
+.gallery-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.gallery-item img,
+.gallery-item video{
+  max-width:100%;
+  border-radius:8px;
+  margin-bottom:8px;
+}
+
+.gallery-item span{
+  text-align:center;
+  font-weight:bold;
+  color:#1e3a5f;
+}
+
+/* School title/logo */
+.school-title{
+  text-align:center;
+  font-size:24px;
+  margin-top:10px;
+  color:#1e3a5f;
+}
+
+.logo{
+  display:block;
+  margin:auto;
+  max-width:140px;
+  margin-top:10px;
+  margin-bottom:20px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="menu-btn" onclick="openMenu()">☰</span>
+  <b>St Elizabeth Integrated Academy</b>
+</div>
+
+<!-- SIDE MENU -->
+<div id="drawer" class="drawer">
+  <button onclick="goPage('index.html')">🏠 Home</button>
+  <button onclick="goPage('about.html')">📘 About</button>
+  <button onclick="goPage('admissions.html')">🎓 Admissions</button>
+  <button onclick="goPage('academics.html')">📚 Academics</button>
+  <button onclick="goPage('news.html')">📰 News & Events</button>
+  <button onclick="goPage('gallery.html')">🖼 Gallery</button>
+  <button onclick="goPage('contact.html')">☎ Contact</button>
+  <button onclick="goPage('portal.html')">👨‍🎓 Student Portal</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+<h1 class="school-title">Gallery</h1>
+<img id="schoolLogo" class="logo" src="images/logo.png">
+
+<!-- Photos Section -->
+<div class="card">
+  <h3>Photos</h3>
+  <div id="photosGrid" class="gallery-grid"></div>
+</div>
+
+<!-- Videos Section -->
+<div class="card">
+  <h3>Videos</h3>
+  <div id="videosGrid" class="gallery-grid"></div>
+</div>
+</div>
+
+<script>
+/* OPEN/CLOSE MENU */
+function openMenu(){document.getElementById("drawer").style.left="0";}
+function closeMenu(){document.getElementById("drawer").style.left="-260px";}
+function goPage(page){closeMenu(); window.location.href=page;}
+
+/* CLOSE MENU ON CLICK OUTSIDE */
+document.addEventListener('click', function(e){
+  const drawer = document.getElementById('drawer');
+  if(!drawer.contains(e.target) && !e.target.classList.contains('menu-btn')){
+    closeMenu();
+  }
+});
+
+/* LOAD GALLERY DATA */
+let savedData = JSON.parse(localStorage.getItem("schoolData"));
+
+if(savedData){
+  const photosGrid = document.getElementById("photosGrid");
+  const videosGrid = document.getElementById("videosGrid");
+
+  (savedData.gallery.photos||[]).forEach(p=>{
+    let item = document.createElement('div');
+    item.className='gallery-item';
+
+    let img = document.createElement('img');
+    img.src=p.src;
+
+    let title = document.createElement('span');
+    title.innerText=p.title||'';
+
+    item.appendChild(img);
+    item.appendChild(title);
+    photosGrid.appendChild(item);
+  });
+
+  (savedData.gallery.videos||[]).forEach(v=>{
+    let item = document.createElement('div');
+    item.className='gallery-item';
+
+    let vid = document.createElement('video');
+    vid.src=v.src;
+    vid.controls=true;
+
+    let title = document.createElement('span');
+    title.innerText=v.title||'';
+
+    item.appendChild(vid);
+    item.appendChild(title);
+    videosGrid.appendChild(item);
+  });
+}
+</script>
+
+</body>
+</html>

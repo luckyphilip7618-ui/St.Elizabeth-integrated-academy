@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal - St Elizabeth</title>
+<style>
+body {
+  font-family:'Segoe UI',sans-serif;
+  background:#f2f4f7;
+  margin:0;
+  padding:0;
+}
+.topbar {
+  background:#2c3e50;
+  color:white;
+  padding:20px;
+  text-align:center;
+  font-size:1.5em;
+}
+.container {
+  max-width:800px;
+  margin:20px auto;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+h3 {
+  color:#2c3e50;
+  margin-bottom:15px;
+}
+input, select, textarea, button {
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:5px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
+  font-size:1em;
+}
+button {
+  background:#2c3e50;
+  color:white;
+  cursor:pointer;
+}
+button:hover {
+  background:#34495e;
+}
+.result-card {
+  border:1px solid #ddd;
+  padding:15px;
+  border-radius:8px;
+  margin-top:15px;
+  background:#f9f9f9;
+}
+.result-card h4 {
+  margin-top:0;
+  color:#2c3e50;
+}
+textarea {
+  font-family:monospace;
+}
+#portalContent {
+  margin-top:20px;
+}
+.logout-btn {
+  background:#c0392b;
+  margin-top:20px;
+}
+.logout-btn:hover {
+  background:#e74c3c;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">St Elizabeth Portal</div>
+
+<div class="container">
+
+<h3>Login</h3>
+<label>Role:</label>
+<select id="loginRole">
+  <option value="student">Student/Parent</option>
+  <option value="teacher">Teacher</option>
+</select>
+<label>Username:</label>
+<input type="text" id="loginUsername" placeholder="Name (student) or ID (teacher)">
+<label>Password / Admission #:</label>
+<input type="text" id="loginPassword" placeholder="Admission # for student / password for teacher">
+<button onclick="loginPortal()">Login</button>
+
+<div id="portalContent" style="display:none;">
+  <h3 id="welcomeMsg"></h3>
+  <div id="resultsArea"></div>
+  <button class="logout-btn" onclick="logoutPortal()">Logout</button>
+</div>
+
+</div>
+
+<script>
+// INIT
+let schoolData = JSON.parse(localStorage.getItem('schoolData')) || {};
+schoolData.portal = schoolData.portal || {};
+schoolData.portal.students = schoolData.portal.students || [];
+schoolData.portal.teachers = schoolData.portal.teachers || [];
+
+// LOGIN
+function loginPortal(){
+  let role = document.getElementById('loginRole').value;
+  let username = document.getElementById('loginUsername').value.trim();
+  let password = document.getElementById('loginPassword').value.trim();
+  
+  if(role==='student'){
+    let student = schoolData.portal.students.find(s => s.name===username && s.admission===password);
+    if(!student){alert('Student not found or wrong admission number'); return;}
+    showStudentPortal(student);
+  } else {
+    let teacher = schoolData.portal.teachers.find(t => t.id===username && t.password===password);
+    if(!teacher){alert('Teacher not found or wrong password'); return;}
+    showTeacherPortal(teacher);
+  }
+}
+
+// STUDENT VIEW
+function showStudentPortal(student){
+  document.getElementById('welcomeMsg').innerText = `Welcome, ${student.name}`;
+  document.getElementById('portalContent').style.display='block';
+  let area = document.getElementById('resultsArea');
+  area.innerHTML = '';
+  
+  let grades = student.grades || {};
+  if(Object.keys(grades).length===0){
+    area.innerHTML = "<p>No results available yet.</p>";
+  } else {
+    for(let term in grades){
+      let card = document.createElement('div'); card.className='result-card';
+      card.innerHTML = `<h4>${term}</h4>`;
+      for(let subject in grades[term]){
+        card.innerHTML += `<p>${subject}: ${grades[term][subject]}</p>`;
+      }
+      area.appendChild(card);
+    }
+  }
+}
+
+// TEACHER VIEW
+function showTeacherPortal(teacher){
+  document.getElementById('welcomeMsg').innerText = `Welcome, ${teacher.name} (Teacher)`;
+  document.getElementById('portalContent').style.display='block';
+  let area = document.getElementById('resultsArea'); area.innerHTML='';
+
+  schoolData.portal.students.forEach((s,i)=>{
+    let div = document.createElement('div'); div.className='result-card';
+    div.innerHTML = `<h4>${s.name} (Adm#: ${s.admission})</h4>
+      <label>Enter Grades as JSON per term:</label>
+      <textarea id="grades_${i}" rows="4">${JSON.stringify(s.grades||{})}</textarea>
+      <button onclick="saveStudentGrades(${i})">Save Grades</button>`;
+    area.appendChild(div);
+  });
+}
+
+// SAVE GRADES
+function saveStudentGrades(i){
+  let text = document.getElementById(`grades_${i}`).value;
+  try{
+    let grades = JSON.parse(text);
+    schoolData.portal.students[i].grades = grades;
+    localStorage.setItem('schoolData', JSON.stringify(schoolData));
+    alert(`Grades saved for ${schoolData.portal.students[i].name}`);
+  }catch(e){
+    alert('Invalid JSON format');
+  }
+}
+
+// LOGOUT
+function logoutPortal(){
+  document.getElementById('portalContent').style.display='none';
+  document.getElementById('loginUsername').value='';
+  document.getElementById('loginPassword').value='';
+}
+</script>
+</body>
+</html>

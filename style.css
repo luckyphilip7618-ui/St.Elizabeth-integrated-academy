@@ -1,0 +1,204 @@
+/* GOOGLE FONT */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* RESET */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+/* BODY */
+body{
+  background:#f4f6f8;
+  color:#333;
+  line-height:1.6;
+  scroll-behavior:smooth;
+}
+
+/* TOP BAR (Menu Icon) */
+.top-bar{
+  background:#2c3e50;
+  padding:10px 20px;
+  display:flex;
+  justify-content:flex-start;
+  align-items:center;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.menu-btn{
+  font-size:26px;
+  cursor:pointer;
+  color:white;
+  transition:0.3s;
+}
+
+.menu-btn:hover{
+  transform:scale(1.1);
+}
+
+/* SIDE DRAWER MENU */
+#drawer{
+  position:fixed;
+  left:-260px;
+  top:0;
+  width:260px;
+  height:100%;
+  background:#34495e;
+  padding-top:60px;
+  transition:0.35s ease;
+  z-index:1001;
+}
+
+#drawer a{
+  display:block;
+  color:white;
+  padding:15px 20px;
+  text-decoration:none;
+  font-size:16px;
+  transition:0.3s;
+}
+
+#drawer a:hover{
+  background:#2c3e50;
+  padding-left:28px;
+}
+
+/* CONTENT AREA */
+.content{
+  padding:25px;
+  max-width:900px;
+  margin:auto;
+  text-align:center; /* center all content */
+}
+
+/* SCHOOL NAME */
+.school-name{
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:1px;
+  margin-top:20px;
+  color:#2c3e50;
+  text-align:center;
+}
+
+/* LOGO BOX */
+.logo-box{
+  margin:20px 0;
+}
+
+.logo-box img{
+  max-width:180px;
+  height:auto;
+  display:block;
+  margin:auto;
+  border-radius:8px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+
+.logo-box img:hover{
+  transform:scale(1.05);
+}
+
+/* BANNER IMAGE */
+.banner{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+  border-radius:8px;
+  margin-top:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.2);
+  transition:0.3s;
+}
+
+.banner:hover{
+  transform:scale(1.02);
+}
+
+/* CARD DESIGN */
+.card{
+  background:white;
+  padding:20px;
+  margin:20px auto;
+  border-radius:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  max-width:800px;
+  transition:0.3s;
+  text-align:center; /* center content inside cards */
+}
+
+.card:hover{
+  transform:translateY(-3px);
+}
+
+/* SECTION TITLES */
+.card h2{
+  color:#2c3e50;
+  margin-bottom:10px;
+  font-weight:600;
+}
+
+/* TEXT */
+.card p{
+  color:#555;
+  line-height:1.6;
+  font-size:16px;
+}
+
+/* LISTS */
+ul{
+  margin-top:10px;
+  padding-left:20px;
+  text-align:left;
+}
+
+li{
+  margin-bottom:6px;
+  color:#555;
+  font-size:15px;
+}
+
+/* BUTTON STYLE */
+button{
+  background:#2c3e50;
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:5px;
+  cursor:pointer;
+  transition:0.3s;
+  font-size:15px;
+}
+
+button:hover{
+  background:#1f2d3a;
+  transform:scale(1.05);
+}
+
+/* FOOTER */
+footer{
+  background:#2c3e50;
+  color:white;
+  text-align:center;
+  padding:15px;
+  margin-top:40px;
+  font-size:14px;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .school-name{
+    font-size:26px;
+  }
+  .card{
+    padding:15px;
+  }
+  .banner{
+    height:180px;
+  }
+}

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - St Elizabeth</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+body { font-family:'Segoe UI',sans-serif; background:#f2f4f7; margin:0; }
+.top-bar { background:#2c3e50; color:white; padding:15px; display:flex; align-items:center; justify-content:center; font-size:1.5em; }
+.container { padding:20px; max-width:1000px; margin:auto; }
+h1,h2,h3 { margin-top:0; }
+.tab-buttons { display:flex; flex-wrap:wrap; margin-bottom:20px; }
+.tab-buttons button { margin-right:10px; margin-bottom:5px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; background:#34495e; color:white; }
+.tab-buttons button.active { background:#2c3e50; }
+.tab-content { display:none; background:white; padding:20px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); margin-bottom:20px; }
+textarea, input, select, button { width:100%; padding:10px; margin:5px 0; border-radius:5px; border:1px solid #ccc; box-sizing:border-box; font-size:1em; }
+button.save-btn { background:#2c3e50; color:white; cursor:pointer; }
+button.save-btn:hover { background:#34495e; }
+.student-edit, .teacher-edit { border:1px solid #ccc; padding:10px; border-radius:8px; margin-bottom:10px; background:#f9f9f9; }
+.student-edit label, .teacher-edit label { font-weight:bold; margin-top:5px; display:block; }
+img, video { border-radius:8px; max-width:150px; margin-top:5px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">Admin Panel - St Elizabeth</div>
+
+<div class="container">
+
+  <!-- TABS -->
+  <div class="tab-buttons">
+    <button class="tab-btn active" onclick="showTab('homeTab', event)">Home</button>
+    <button class="tab-btn" onclick="showTab('aboutTab', event)">About</button>
+    <button class="tab-btn" onclick="showTab('admissionsTab', event)">Admissions</button>
+    <button class="tab-btn" onclick="showTab('academicsTab', event)">Academics</button>
+    <button class="tab-btn" onclick="showTab('newsTab', event)">News & Events</button>
+    <button class="tab-btn" onclick="showTab('galleryTab', event)">Gallery</button>
+    <button class="tab-btn" onclick="showTab('contactTab', event)">Contact</button>
+    <button class="tab-btn" onclick="showTab('portalTab', event)">Portal</button>
+  </div>
+
+  <!-- HOME -->
+  <div id="homeTab" class="tab-content" style="display:block;">
+    <h2>Home</h2>
+    <label>Logo:</label>
+    <input type="file" accept="image/*" onchange="updateLogo(event)">
+    <img id="logoPreview" src="" alt="Logo Preview">
+    <label>Welcome Message:</label>
+    <textarea id="homeWelcome" rows="3"></textarea>
+    <label>Motto:</label>
+    <input type="text" id="homeMotto">
+    <label>About Short:</label>
+    <textarea id="homeAbout" rows="3"></textarea>
+    <button class="save-btn" onclick="saveData()">Save Home</button>
+  </div>
+
+  <!-- ABOUT -->
+  <div id="aboutTab" class="tab-content">
+    <h2>About</h2>
+    <label>Mission:</label>
+    <textarea id="aboutMission" rows="2"></textarea>
+    <label>Vision:</label>
+    <textarea id="aboutVision" rows="2"></textarea>
+    <label>History:</label>
+    <textarea id="aboutHistory" rows="3"></textarea>
+    <label>Staff Info:</label>
+    <textarea id="aboutStaff" rows="3"></textarea>
+    <button class="save-btn" onclick="saveData()">Save About</button>
+  </div>
+
+  <!-- ADMISSIONS -->
+  <div id="admissionsTab" class="tab-content">
+    <h2>Admissions</h2>
+    <label>Enrollment Info:</label>
+    <textarea id="admissionsEnroll" rows="3"></textarea>
+    <label>Requirements (one per line):</label>
+    <textarea id="admissionsReq" rows="3"></textarea>
+    <label>Forms Info:</label>
+    <textarea id="admissionsForms" rows="3"></textarea>
+    <button class="save-btn" onclick="saveData()">Save Admissions</button>
+  </div>
+
+  <!-- ACADEMICS -->
+  <div id="academicsTab" class="tab-content">
+    <h2>Academics</h2>
+    <label>Curriculum Info:</label>
+    <textarea id="acadCurriculum" rows="3"></textarea>
+    <label>Departments (comma separated):</label>
+    <input type="text" id="acadDepartments">
+    <label>Schedule Info:</label>
+    <textarea id="acadSchedule" rows="3"></textarea>
+    <button class="save-btn" onclick="saveData()">Save Academics</button>
+  </div>
+
+  <!-- NEWS -->
+  <div id="newsTab" class="tab-content">
+    <h2>News & Events</h2>
+    <label>Announcements (one per line):</label>
+    <textarea id="newsAnnouncements" rows="3"></textarea>
+    <label>Events (one per line):</label>
+    <textarea id="newsEvents" rows="3"></textarea>
+    <label>Newsletters (one per line):</label>
+    <textarea id="newsLetters" rows="3"></textarea>
+    <button class="save-btn" onclick="saveData()">Save News</button>
+  </div>
+
+  <!-- GALLERY -->
+  <div id="galleryTab" class="tab-content">
+    <h2>Gallery</h2>
+    <label>Upload Photos:</label>
+    <input type="file" accept="image/*" multiple onchange="previewGalleryImages(event)">
+    <div id="galleryImagesPreview" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+
+    <label>Upload Videos:</label>
+    <input type="file" accept="video/*" multiple onchange="previewGalleryVideos(event)">
+    <div id="galleryVideosPreview" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+
+    <button class="save-btn" onclick="saveData()">Save Gallery</button>
+  </div>
+
+  <!-- CONTACT -->
+  <div id="contactTab" class="tab-content">
+    <h2>Contact</h2>
+    <label>Address:</label>
+    <textarea id="contactAddress" rows="2"></textarea>
+    <label>Email:</label>
+    <input type="text" id="contactEmail">
+    <label>Phone:</label>
+    <input type="text" id="contactPhone">
+    <label>Facebook:</label>
+    <input type="text" id="contactFacebook">
+    <label>Twitter:</label>
+    <input type="text" id="contactTwitter">
+    <label>Instagram:</label>
+    <input type="text" id="contactInstagram">
+    <label>Map Embed URL:</label>
+    <input type="text" id="contactMap">
+    <button class="save-btn" onclick="saveData()">Save Contact</button>
+  </div>
+
+<!-- PORTAL -->
+<div id="portalTab" class="tab-content">
+  <h2>Portal Management</h2>
+
+  <h3>Students</h3>
+  <div id="studentList"></div>
+  <button class="save-btn" onclick="addStudent()">Add New Student</button>
+
+  <h3>Teachers</h3>
+  <div id="teacherList"></div>
+  <button class="save-btn" onclick="addTeacher()">Add New Teacher</button>
+
+  <!-- NEW Save Portal Button -->
+  <button class="save-btn" style="margin-top:10px;" onclick="saveData()">Save Portal</button>
+</div>
+
+</div>
+
+<script>
+// TAB NAVIGATION
+function showTab(tabId, event){
+  document.querySelectorAll('.tab-content').forEach(tab=>tab.style.display='none');
+  document.getElementById(tabId).style.display='block';
+  document.querySelectorAll('.tab-buttons button').forEach(btn=>btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+// INITIALIZE DATA
+let schoolData = JSON.parse(localStorage.getItem('schoolData')) || {};
+schoolData.portal = schoolData.portal || {students:[], teachers:[]};
+
+// POPULATE FIELDS
+function populateFields(){
+  const s = schoolData;
+  // Home
+  document.getElementById('homeWelcome').value = s.home?.welcome||'';
+  document.getElementById('homeMotto').value = s.home?.motto||'';
+  document.getElementById('homeAbout').value = s.home?.about||'';
+  document.getElementById('logoPreview').src = s.home?.logo||'';
+  // About
+  document.getElementById('aboutMission').value = s.about?.mission||'';
+  document.getElementById('aboutVision').value = s.about?.vision||'';
+  document.getElementById('aboutHistory').value = s.about?.history||'';
+  document.getElementById('aboutStaff').value = s.about?.staff||'';
+  // Admissions
+  document.getElementById('admissionsEnroll').value = s.admissions?.enrollment||'';
+  document.getElementById('admissionsReq').value = (s.admissions?.requirements||[]).join('\n');
+  document.getElementById('admissionsForms').value = s.admissions?.forms||'';
+  // Academics
+  document.getElementById('acadCurriculum').value = s.academics?.curriculum||'';
+  document.getElementById('acadDepartments').value = (s.academics?.departments||[]).join(',');
+  document.getElementById('acadSchedule').value = s.academics?.schedule||'';
+  // News
+  document.getElementById('newsAnnouncements').value = (s.news?.announcements||[]).join('\n');
+  document.getElementById('newsEvents').value = (s.news?.events||[]).join('\n');
+  document.getElementById('newsLetters').value = (s.news?.newsletters||[]).join('\n');
+  // Contact
+  document.getElementById('contactAddress').value = s.contact?.address||'';
+  document.getElementById('contactEmail').value = s.contact?.email||'';
+  document.getElementById('contactPhone').value = s.contact?.phone||'';
+  document.getElementById('contactFacebook').value = s.contact?.social?.facebook||'';
+  document.getElementById('contactTwitter').value = s.contact?.social?.twitter||'';
+  document.getElementById('contactInstagram').value = s.contact?.social?.instagram||'';
+  document.getElementById('contactMap').value = s.contact?.map||'';
+  renderStudents();
+  renderTeachers();
+}
+populateFields();
+
+// LOGO UPDATE
+function updateLogo(event){
+  let reader = new FileReader();
+  reader.onload = function(){ 
+    schoolData.home = schoolData.home||{};
+    schoolData.home.logo = reader.result;
+    document.getElementById('logoPreview').src = reader.result;
+  };
+  reader.readAsDataURL(event.target.files[0]);
+}
+
+// GALLERY PREVIEW
+function previewGalleryImages(event){
+  let div = document.getElementById('galleryImagesPreview'); div.innerHTML='';
+  schoolData.gallery = schoolData.gallery||{photos:[],videos:[]};
+  schoolData.gallery.photos=[];
+  Array.from(event.target.files).forEach(file=>{
+    let reader = new FileReader();
+    reader.onload = function(){
+      let img = document.createElement('img');
+      img.src = reader.result; img.style.maxWidth='100px';
+      div.appendChild(img);
+      schoolData.gallery.photos.push(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function previewGalleryVideos(event){
+  let div = document.getElementById('galleryVideosPreview'); div.innerHTML='';
+  schoolData.gallery = schoolData.gallery||{photos:[],videos:[]};
+  schoolData.gallery.videos=[];
+  Array.from(event.target.files).forEach(file=>{
+    let reader = new FileReader();
+    reader.onload = function(){
+      let vid = document.createElement('video'); vid.src=reader.result; vid.controls=true; vid.style.maxWidth='150px';
+      div.appendChild(vid); schoolData.gallery.videos.push(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// STUDENTS AND TEACHERS
+function renderStudents(){
+  let div = document.getElementById('studentList'); div.innerHTML='';
+  (schoolData.portal.students||[]).forEach((s,i)=>{
+    let d = document.createElement('div'); d.className='student-edit';
+    d.innerHTML=`<label>Full Name:</label><input value="${s.name}" placeholder="Full Name" onchange="schoolData.portal.students[${i}].name=this.value">
+    <label>Admission #:</label><input value="${s.admission}" placeholder="Admission #" onchange="schoolData.portal.students[${i}].admission=this.value">
+    <label>Grades (JSON):</label><textarea placeholder='{"Term1":{"Math":90}}' onchange="schoolData.portal.students[${i}].grades=JSON.parse(this.value)">${JSON.stringify(s.grades||{})}</textarea>
+    <button onclick="removeStudent(${i})">Remove Student</button>`;
+    div.appendChild(d);
+  });
+}
+function renderTeachers(){
+  let div = document.getElementById('teacherList'); div.innerHTML='';
+  (schoolData.portal.teachers||[]).forEach((t,i)=>{
+    let d = document.createElement('div'); d.className='teacher-edit';
+    d.innerHTML=`<label>Name:</label><input value="${t.name}" placeholder="Name" onchange="schoolData.portal.teachers[${i}].name=this.value">
+    <label>ID:</label><input value="${t.id}" placeholder="Teacher ID" onchange="schoolData.portal.teachers[${i}].id=this.value">
+    <label>Password:</label><input value="${t.password}" placeholder="Password" onchange="schoolData.portal.teachers[${i}].password=this.value">
+    <button onclick="removeTeacher(${i})">Remove Teacher</button>`;
+    div.appendChild(d);
+  });
+}
+function addStudent(){ schoolData.portal.students.push({name:'',admission:'',grades:{}}); renderStudents();}
+function addTeacher(){ schoolData.portal.teachers.push({name:'',id:'',password:''}); renderTeachers();}
+function removeStudent(i){ schoolData.portal.students.splice(i,1); renderStudents();}
+function removeTeacher(i){ schoolData.portal.teachers.splice(i,1); renderTeachers();}
+
+// SAVE DATA
+function saveData(){
+  schoolData.home = schoolData.home||{};
+  schoolData.about = schoolData.about||{};
+  schoolData.admissions = schoolData.admissions||{};
+  schoolData.academics = schoolData.academics||{};
+  schoolData.news = schoolData.news||{};
+  schoolData.contact = schoolData.contact||{social:{}};
+  schoolData.gallery = schoolData.gallery||{photos:[],videos:[]};
+
+  schoolData.home.welcome = document.getElementById('homeWelcome').value;
+  schoolData.home.motto = document.getElementById('homeMotto').value;
+  schoolData.home.about = document.getElementById('homeAbout').value;
+
+  schoolData.about.mission = document.getElementById('aboutMission').value;
+  schoolData.about.vision = document.getElementById('aboutVision').value;
+  schoolData.about.history = document.getElementById('aboutHistory').value;
+  schoolData.about.staff = document.getElementById('aboutStaff').value;
+
+  schoolData.admissions.enrollment = document.getElementById('admissionsEnroll').value;
+  schoolData.admissions.requirements = document.getElementById('admissionsReq').value.split('\n');
+  schoolData.admissions.forms = document.getElementById('admissionsForms').value;
+
+  schoolData.academics.curriculum = document.getElementById('acadCurriculum').value;
+  schoolData.academics.departments = document.getElementById('acadDepartments').value.split(',');
+  schoolData.academics.schedule = document.getElementById('acadSchedule').value;
+
+  schoolData.news.announcements = document.getElementById('newsAnnouncements').value.split('\n');
+  schoolData.news.events = document.getElementById('newsEvents').value.split('\n');
+  schoolData.news.newsletters = document.getElementById('newsLetters').value.split('\n');
+
+  schoolData.contact.address = document.getElementById('contactAddress').value;
+  schoolData.contact.email = document.getElementById('contactEmail').value;
+  schoolData.contact.phone = document.getElementById('contactPhone').value;
+  schoolData.contact.social.facebook = document.getElementById('contactFacebook').value;
+  schoolData.contact.social.twitter = document.getElementById('contactTwitter').value;
+  schoolData.contact.social.instagram = document.getElementById('contactInstagram').value;
+  schoolData.contact.map = document.getElementById('contactMap').value;
+
+  localStorage.setItem('schoolData', JSON.stringify(schoolData));
+  alert('All data saved! Public pages will reflect changes immediately.');
+}
+</script>
+
+</body>
+</html>

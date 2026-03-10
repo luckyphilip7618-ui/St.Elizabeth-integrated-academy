@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - St Elizabeth Integrated Academy</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#f4f6f8;
+  overflow-x:hidden;
+}
+
+/* TOP BAR */
+.topbar{
+  background:#1e3a5f;
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:1001;
+}
+.menu-btn{
+  font-size:26px;
+  cursor:pointer;
+  margin-right:15px;
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  opacity:0;
+  visibility:hidden;
+  transition:0.3s;
+  z-index:1000;
+}
+
+/* SIDE DRAWER */
+.drawer{
+  position:fixed;
+  left:-260px;
+  top:0;
+  width:260px;
+  height:100%;
+  background:#243a5e;
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1002;
+}
+.drawer button{
+  width:85%;
+  margin:10px auto;
+  display:block;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2f4d75;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+.drawer button:hover{background:#3f6598;}
+
+/* CONTENT */
+.content{
+  padding:120px 20px 20px 20px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.school-title{
+  text-align:center;
+  font-size:24px;
+  margin-top:10px;
+  color:#1e3a5f;
+}
+
+.social-links a{
+  text-decoration:none;
+  color:white;
+  font-weight:bold;
+  padding:10px 15px;
+  display:inline-block;
+  border-radius:5px;
+}
+.facebook{background:#3b5998;}
+.twitter{background:#1da1f2;}
+.instagram{background:#c32aa3;}
+.social-links a:hover{opacity:0.8;}
+iframe{
+  width:100%;
+  height:300px;
+  border:0;
+  border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="menu-btn" onclick="openMenu()">☰</span>
+  <b>Contact - St Elizabeth Integrated Academy</b>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+<!-- SIDE MENU -->
+<div id="drawer" class="drawer">
+  <button onclick="goPage('index.html')">🏠 Home</button>
+  <button onclick="goPage('about.html')">📘 About</button>
+  <button onclick="goPage('admissions.html')">🎓 Admissions</button>
+  <button onclick="goPage('academics.html')">📚 Academics</button>
+  <button onclick="goPage('news.html')">📰 News & Events</button>
+  <button onclick="goPage('gallery.html')">🖼 Gallery</button>
+  <button onclick="goPage('contact.html')">☎ Contact</button>
+  <button onclick="goPage('portal.html')">👨‍🎓 Student Portal</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+  <h1 class="school-title">Contact Us</h1>
+
+  <div class="card">
+    <h3>Address</h3>
+    <p id="contactAddress">Nairobi, Kenya</p>
+  </div>
+
+  <div class="card">
+    <h3>Email & Phone</h3>
+    <p>Email: <span id="contactEmail">info@stelizabethacademy.com</span></p>
+    <p>Phone: <span id="contactPhone">0712345678</span></p>
+  </div>
+
+  <div class="card">
+    <h3>Facebook</h3>
+    <div class="social-links">
+      <a id="contactFacebook" class="facebook" href="#" target="_blank">Facebook</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Twitter</h3>
+    <div class="social-links">
+      <a id="contactTwitter" class="twitter" href="#" target="_blank">Twitter</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Instagram</h3>
+    <div class="social-links">
+      <a id="contactInstagram" class="instagram" href="#" target="_blank">Instagram</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Find Us Here</h3>
+    <iframe id="contactMap" src="https://maps.google.com" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+/* OPEN & CLOSE MENU */
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("overlay");
+
+function openMenu(){
+  drawer.style.left="0";
+  overlay.style.opacity="1";
+  overlay.style.visibility="visible";
+}
+function closeMenu(){
+  drawer.style.left="-260px";
+  overlay.style.opacity="0";
+  overlay.style.visibility="hidden";
+}
+
+/* NAVIGATION */
+function goPage(page){
+  window.location.href = page;
+}
+
+/* LOAD CONTACT DATA FROM ADMIN */
+let savedData = JSON.parse(localStorage.getItem("schoolData"));
+if(savedData && savedData.contact){
+  document.getElementById("contactAddress").innerText = savedData.contact.address || "Nairobi, Kenya";
+  document.getElementById("contactEmail").innerText = savedData.contact.email || "info@stelizabethacademy.com";
+  document.getElementById("contactPhone").innerText = savedData.contact.phone || "0712345678";
+
+  // Social links using username/handle from admin
+  let fbUser = savedData.contact.social.facebook || "";
+  let twUser = savedData.contact.social.twitter || "";
+  let igUser = savedData.contact.social.instagram || "";
+
+  document.getElementById("contactFacebook").href = fbUser ? `https://facebook.com/${fbUser}` : "#";
+  document.getElementById("contactTwitter").href = twUser ? `https://twitter.com/${twUser}` : "#";
+  document.getElementById("contactInstagram").href = igUser ? `https://instagram.com/${igUser}` : "#";
+
+  // Map embed
+  if(savedData.contact.map){
+    document.getElementById("contactMap").src = savedData.contact.map;
+  }
+}
+
+/* SWIPE MENU FOR MOBILE */
+let startX=0;
+document.addEventListener("touchstart", e => { startX=e.touches[0].clientX; });
+document.addEventListener("touchend", e => {
+  let endX=e.changedTouches[0].clientX;
+  if(startX<50 && endX>120) openMenu();
+  if(startX>200 && endX<120) closeMenu();
+});
+</script>
+
+</body>
+</html>

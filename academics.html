@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academics - St Elizabeth Integrated Academy</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  margin:0;
+  background:#f4f6f8;
+  overflow-x:hidden;
+}
+/* TOP BAR */
+.topbar{
+  background:#1e3a5f;
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:1001;
+}
+.menu-btn{
+  font-size:26px;
+  cursor:pointer;
+  margin-right:15px;
+}
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  opacity:0;
+  visibility:hidden;
+  transition:0.3s;
+  z-index:1000;
+}
+/* SIDE DRAWER */
+.drawer{
+  position:fixed;
+  left:-260px;
+  top:0;
+  width:260px;
+  height:100%;
+  background:#243a5e;
+  padding-top:60px;
+  transition:0.3s;
+  z-index:1002;
+}
+.drawer button{
+  width:85%;
+  margin:10px auto;
+  display:block;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2f4d75;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+.drawer button:hover{background:#3f6598;}
+/* CONTENT */
+.content{
+  padding:100px 20px 20px 20px;
+}
+.card{
+  background:white;
+  padding:18px;
+  border-radius:10px;
+  margin-bottom:18px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+.school-title{
+  text-align:center;
+  font-size:24px;
+  margin-top:10px;
+  color:#1e3a5f;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="menu-btn" onclick="openMenu()">☰</span>
+  <b>Academics - St Elizabeth Integrated Academy</b>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+<!-- SIDE MENU -->
+<div id="drawer" class="drawer">
+  <button onclick="goPage('index.html')">🏠 Home</button>
+  <button onclick="goPage('about.html')">📘 About</button>
+  <button onclick="goPage('admissions.html')">🎓 Admissions</button>
+  <button onclick="goPage('academics.html')">📚 Academics</button>
+  <button onclick="goPage('news.html')">📰 News & Events</button>
+  <button onclick="goPage('gallery.html')">🖼 Gallery</button>
+  <button onclick="goPage('contact.html')">☎ Contact</button>
+  <button onclick="goPage('portal.html')">👨‍🎓 Student Portal</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+  <h1 class="school-title">Academics</h1>
+
+  <div class="card">
+    <h3>Curriculum Information</h3>
+    <p id="curriculumText">Our school follows a comprehensive curriculum.</p>
+  </div>
+
+  <div class="card">
+    <h3>Departments</h3>
+    <ul id="departmentsList">
+      <li>Department 1</li>
+      <li>Department 2</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Schedule</h3>
+    <p id="scheduleText">Timetable and academic schedule information.</p>
+  </div>
+</div>
+
+<script>
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("overlay");
+
+function openMenu(){
+  drawer.style.left="0";
+  overlay.style.opacity="1";
+  overlay.style.visibility="visible";
+}
+function closeMenu(){
+  drawer.style.left="-260px";
+  overlay.style.opacity="0";
+  overlay.style.visibility="hidden";
+}
+
+function goPage(page){
+  window.location.href = page;
+}
+
+/* LOAD ACADEMICS DATA FROM ADMIN */
+let savedData = JSON.parse(localStorage.getItem("schoolData"));
+if(savedData && savedData.academics){
+  document.getElementById("curriculumText").innerText =
+    savedData.academics.curriculum || "Our school follows a comprehensive curriculum.";
+
+  let departments = savedData.academics.departments || ["Department 1","Department 2"];
+  let deptList = document.getElementById("departmentsList");
+  deptList.innerHTML="";
+  departments.forEach(d=>{
+    let li=document.createElement("li");
+    li.innerText=d;
+    deptList.appendChild(li);
+  });
+
+  document.getElementById("scheduleText").innerText =
+    savedData.academics.schedule || "Timetable and academic schedule information.";
+}
+
+/* SWIPE MENU FOR MOBILE */
+let startX=0;
+document.addEventListener("touchstart", e => { startX=e.touches[0].clientX; });
+document.addEventListener("touchend", e => {
+  let endX=e.changedTouches[0].clientX;
+  if(startX<50 && endX>120) openMenu();
+  if(startX>200 && endX<120) closeMenu();
+});
+</script>
+
+</body>
+</html>
